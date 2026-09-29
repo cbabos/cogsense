@@ -7,13 +7,14 @@ OpenAI-compatible LLM provider and returns the response.
 
 ## 2. Inputs
 
-| Field | Type | Required | Description |
-|---|---|---|---|
-| model | string | yes | Model ID to use |
-| messages | array of { role, content } | yes | Chat messages |
-| timeoutMs | number | no | Override default LLM call timeout (milliseconds) |
+| Field     | Type                       | Required | Description                                      |
+| --------- | -------------------------- | -------- | ------------------------------------------------ |
+| model     | string                     | yes      | Model ID to use                                  |
+| messages  | array of { role, content } | yes      | Chat messages                                    |
+| timeoutMs | number                     | no       | Override default LLM call timeout (milliseconds) |
 
 **Message validation rules:**
+
 - `role` must be one of: `MsgRole.System`, `MsgRole.Assistant`, `MsgRole.User`
 - `content` must be a non-empty string
 
@@ -21,44 +22,45 @@ OpenAI-compatible LLM provider and returns the response.
 
 ### 3.1 Success Response (200)
 
-| Field | Type | Source | Description |
-|---|---|---|---|
-| id | string | provider response `.id` | Provider-generated response ID |
-| model | string | provider response `.model` | Model that processed the request |
-| messages | array | mapped from `.choices` | See mapping table in section 4 |
-| usage.inputTokens | number | mapped from `.usage.prompt_tokens` | Input token count |
-| usage.outputTokens | number | mapped from `.usage.completion_tokens` | Output token count |
-| elapsedTime | number | measured in code | LLM API call duration in milliseconds |
+| Field              | Type   | Source                                 | Description                           |
+| ------------------ | ------ | -------------------------------------- | ------------------------------------- |
+| id                 | string | provider response `.id`                | Provider-generated response ID        |
+| model              | string | provider response `.model`             | Model that processed the request      |
+| messages           | array  | mapped from `.choices`                 | See mapping table in section 4        |
+| usage.inputTokens  | number | mapped from `.usage.prompt_tokens`     | Input token count                     |
+| usage.outputTokens | number | mapped from `.usage.completion_tokens` | Output token count                    |
+| elapsedTime        | number | measured in code                       | LLM API call duration in milliseconds |
 
 ### 3.2 Error Responses
 
-| HTTP Status | Error Code | Exception Type | Response Body | When |
-|---|---|---|---|---|
-| 400 | `invalid_input` | `InputError` | `{ error: { code, message, input } }` | Input validation fails |
-| 408 | `llm_timeout` | `LLMTimeoutError` | `{ error: { code, message } }` | LLM call exceeds timeout |
-| 500 | `provider_error` | `ProviderError` | `{ error: { code, message } }` | Provider returns an error |
-| 500 | `network_error` | `NetworkError` | `{ error: { code, message, requestURL } }` | fetch() fails (DNS, connection refused) |
-| 500 | (fallback) | `DefaultError` | `{ error: { code, message } }` | Any unhandled error |
+| HTTP Status | Error Code       | Exception Type    | Response Body                              | When                                    |
+| ----------- | ---------------- | ----------------- | ------------------------------------------ | --------------------------------------- |
+| 400         | `invalid_input`  | `InputError`      | `{ error: { code, message, input } }`      | Input validation fails                  |
+| 408         | `llm_timeout`    | `LLMTimeoutError` | `{ error: { code, message } }`             | LLM call exceeds timeout                |
+| 500         | `provider_error` | `ProviderError`   | `{ error: { code, message } }`             | Provider returns an error               |
+| 500         | `network_error`  | `NetworkError`    | `{ error: { code, message, requestURL } }` | fetch() fails (DNS, connection refused) |
+| 500         | (fallback)       | `DefaultError`    | `{ error: { code, message } }`             | Any unhandled error                     |
 
 ## 4. Response Normalization
 
 Provider returns OpenAI chat completion format. Mapping:
 
-| Provider Field | Output Field | Notes |
-|---|---|---|
-| `.id` | `id` | Direct passthrough |
-| `.model` | `model` | Direct passthrough |
-| `.choices[i].message.role` | `messages[i].role` | Direct passthrough |
-| `.choices[i].message.content` | `messages[i].content` | Direct passthrough |
-| `.choices[i].index` | — | Used for ordering only, not in output |
-| `.choices[i].finish_reason` | — | Used in code logic, not in output |
-| `.usage.prompt_tokens` | `usage.inputTokens` | snake_case → camelCase |
-| `.usage.completion_tokens` | `usage.outputTokens` | snake_case → camelCase |
-| `.usage.total_tokens` | — | Not used (derivable: input + output) |
-| `.object` | — | Not used |
-| `.created` | — | Not used |
+| Provider Field                | Output Field          | Notes                                 |
+| ----------------------------- | --------------------- | ------------------------------------- |
+| `.id`                         | `id`                  | Direct passthrough                    |
+| `.model`                      | `model`               | Direct passthrough                    |
+| `.choices[i].message.role`    | `messages[i].role`    | Direct passthrough                    |
+| `.choices[i].message.content` | `messages[i].content` | Direct passthrough                    |
+| `.choices[i].index`           | —                     | Used for ordering only, not in output |
+| `.choices[i].finish_reason`   | —                     | Used in code logic, not in output     |
+| `.usage.prompt_tokens`        | `usage.inputTokens`   | snake_case → camelCase                |
+| `.usage.completion_tokens`    | `usage.outputTokens`  | snake_case → camelCase                |
+| `.usage.total_tokens`         | —                     | Not used (derivable: input + output)  |
+| `.object`                     | —                     | Not used                              |
+| `.created`                    | —                     | Not used                              |
 
 **Provider response validation:**
+
 - If `.choices` is missing or empty → throw `ProviderError`
 - If `.choices[i].message` is missing → throw `ProviderError`
 - If `.choices[i].message.role` is missing → throw `ProviderError`
@@ -78,10 +80,12 @@ Error (built-in)
 ### Exception Details
 
 **DefaultError** — base class for all app errors.
+
 - Fields: `code: string`, `message: string`
 - HTTP status: 500 (fallback for any unhandled error)
 
 **InputError** — input validation failure.
+
 - Extends: `DefaultError`
 - Code: `invalid_input`
 - Additional fields: `input` (the invalid input, for debugging)
@@ -93,6 +97,7 @@ Error (built-in)
   - A message has: undefined role, invalid role (not in MsgRole), missing content, undefined content, non-string content, empty string content
 
 **LLMTimeoutError** — LLM call exceeded timeout.
+
 - Extends: `DefaultError`
 - Code: `llm_timeout`
 - Constructor parameter: `timeout` (number, milliseconds)
@@ -100,6 +105,7 @@ Error (built-in)
 - Thrown when: elapsed time exceeds `LLM_DEFAULT_TIMEOUT_MS` or `timeoutMs` input parameter
 
 **ProviderError** — provider returned an error.
+
 - Extends: `DefaultError`
 - Code: `provider_error`
 - Constructor parameter: `requestModel` (string)
@@ -111,6 +117,7 @@ Error (built-in)
   - Budget exhausted
 
 **NetworkError** — fetch() failed at the transport level.
+
 - Extends: `DefaultError`
 - Code: `network_error`
 - HTTP response fields: `code`, `message`, `requestURL`
@@ -121,11 +128,11 @@ Error (built-in)
 
 ## 6. Configuration
 
-| Env Variable | Type | Required | Default | Description |
-|---|---|---|---|---|
-| `LLM_PROVIDER` | string | yes | — | Provider endpoint URL (e.g., `http://127.0.0.1:8000/v1`) |
-| `LLM_PROVIDER_API_KEY` | string | yes | — | Bearer token for provider auth |
-| `LLM_DEFAULT_TIMEOUT_MS` | number | no | `600000` | Default LLM call timeout in milliseconds |
+| Env Variable             | Type   | Required | Default  | Description                                              |
+| ------------------------ | ------ | -------- | -------- | -------------------------------------------------------- |
+| `LLM_PROVIDER`           | string | yes      | —        | Provider endpoint URL (e.g., `http://127.0.0.1:8000/v1`) |
+| `LLM_PROVIDER_API_KEY`   | string | yes      | —        | Bearer token for provider auth                           |
+| `LLM_DEFAULT_TIMEOUT_MS` | number | no       | `600000` | Default LLM call timeout in milliseconds                 |
 
 `.env.example` committed to repo. `.env` gitignored.
 
