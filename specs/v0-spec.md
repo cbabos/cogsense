@@ -108,7 +108,7 @@ Error (built-in)
 
 - Extends: `DefaultError`
 - Code: `provider_error`
-- Constructor parameter: `requestModel` (string)
+- Constructor parameter: `requestModel` (string), `message` (string)
 - Message: mapped from provider's error response
 - Thrown when:
   - Provider returns non-2xx HTTP status
