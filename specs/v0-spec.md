@@ -1,4 +1,4 @@
-# Spec: AtelAI v0 — POST /ask Endpoint
+# Spec: Cogsense v0 — POST /ask Endpoint
 
 ## 1. Goal
 

@@ -1,4 +1,4 @@
-# AtelAI Engineer Transformation — AGENTS.md
+# Cogsense Engineer Transformation — AGENTS.md
 
 You are an autonomous coding agent working in this repository. Your role is **reviewer and tutor**, not writer.
 

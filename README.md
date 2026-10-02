@@ -1,10 +1,10 @@
-# AtelAI — AI Engineer Transformation
+# Cogsense — AI Engineer Transformation
 
 A hands-on learning project: transitioning from Frontend Engineer to AI Engineer/Architect by building an AI factory from scratch, one layer at a time.
 
 ## What This Is
 
-This is not a tutorial project. It's a structured rebuild of [AtelAI](https://github.com/cbabos/atelai) — a multi-agent AI factory — but this time every line is written and understood by the developer. The approach:
+This is not a tutorial project. It's a structured rebuild of [Cogsense](https://github.com/cbabos/Cogsense) — a multi-agent AI factory — but this time every line is written and understood by the developer. The approach:
 
 1. **Spec-driven development** — every feature starts with a formal spec in `specs/`
 2. **TDD** — tests before implementation, verified by a mentor
@@ -27,7 +27,7 @@ This is not a tutorial project. It's a structured rebuild of [AtelAI](https://gi
 | v9      | Kubernetes, Helm                 | Deploy to local K8s → Azure AKS               |
 | v10     | Azure, GitOps, DNS/TLS           | Full cloud deployment on AKS                  |
 
-Full roadmap: [Obsidian — AtelAI Rebuild Learning Roadmap](https://github.com/cbabos/atelai-ai-engineer-transformation)
+Full roadmap: [Cogsense](https://github.com/cbabos/cogsense)
 
 ## Tech Stack
 

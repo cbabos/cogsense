@@ -1,10 +1,10 @@
-# CONTEXT — AtelAI Engineer Transformation
+# CONTEXT — Cogsense Engineer Transformation
 
 > Living knowledge map. **Read this first every session; update only the parts affected by your changes.** Rules: AGENTS.md.
 
 ## System Architecture Overview
 
-AtelAI Engineer Transformation is a private Node.js application (ESM-only, TypeScript strict) — a learning project for transitioning from Frontend Engineer to AI Engineer/Architect. The code is written by the human (Csaba), with OpenCode as reviewer/tutor.
+Cogsense Engineer Transformation is a private Node.js application (ESM-only, TypeScript strict) — a learning project for transitioning from Frontend Engineer to AI Engineer/Architect. The code is written by the human (Csaba), with OpenCode as reviewer/tutor.
 
 Current scope (v0): single Fastify endpoint (`POST /ask`) that forwards a chat request to an OpenAI-compatible LLM provider (oMLX local) and returns a normalized response.
 
@@ -53,6 +53,6 @@ Design rules (do not violate without updating this file):
 
 - **v1:** Vitest test suite covering POST /ask with fake provider
 - **v2:** Zod input validation, structured error responses, typed error taxonomy expansion
-- **v3-v10:** See roadmap in Obsidian: `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Second Brain/1 Projects/AtelAI Rebuild - Learning Roadmap.md`
+- **v3-v10:** See roadmap in Obsidian: `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Second Brain/1 Projects/Cogsense Rebuild - Learning Roadmap.md`
 - **UI track (week 6+):** Microfrontend architecture, K8s-native deployment
 - **AI engineering track:** Spec-driven development → MCP integration → RAG → agent patterns
